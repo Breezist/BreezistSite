@@ -1,0 +1,31 @@
+{
+  "name": "breezist",
+  "version": "1.0.0",
+  "description": "The code for hosting Breezist's website @ https://www.breezist.com/",
+  "keywords": [
+    "website",
+    "discord"
+  ],
+  "homepage": "https://github.com/Breezist/BreezistWebsite#readme",
+  "bugs": {
+    "url": "https://github.com/Breezist/BreezistWebsite/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Breezist/BreezistWebsite.git"
+  },
+  "license": "ISC",
+  "author": "Breezist",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "boot": "node --env-file=.env app.js",
+    "test": "set port=3000 && set environment=dev && npm run boot",
+    "start": "set port=3000 && set environment=dev && npm run boot"
+  },
+  "dependencies": {
+    "discord.js": "^14.26.4",
+    "express": "^5.2.1",
+    "express-subdomain": "^1.0.6"
+  }
+}
