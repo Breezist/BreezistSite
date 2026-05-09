@@ -1,3 +1,12 @@
+/**
+ *  _____ _____                 _     _   
+ * |  __ | __  |___ ___ ___ ___|_|___| |_ 
+ * | |___| __ -|  _| -_| -_|- _| |_ -|  _|
+ * |_____|_____|_| |___|___|___|_|___|_|  
+ * @name storage.js
+ * @since May 8th, 2026
+ * @description Retrieves files from the /storage folder.
+*/
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

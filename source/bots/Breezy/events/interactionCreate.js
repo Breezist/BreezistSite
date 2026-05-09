@@ -1,3 +1,12 @@
+/**
+ *  _____ _____                 _     _   
+ * |  __ | __  |___ ___ ___ ___|_|___| |_ 
+ * | |___| __ -|  _| -_| -_|- _| |_ -|  _|
+ * |_____|_____|_| |___|___|___|_|___|_|  
+ * @name web.js
+ * @since May 8th, 2026
+ * @description Executes when a new interaction is created.
+*/
 import { Events, CommandInteraction, MessageFlags } from 'discord.js';
 
 export default {

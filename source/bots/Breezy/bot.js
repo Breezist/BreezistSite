@@ -8,7 +8,6 @@
  * @description This is the main Discord bot file. It creates the Client and then sets up the commands from /commands. It also 
  * creates listeners for the events in /events. 
 */
-
 import { 
   Client, 
   GatewayIntentBits, Partials, Collection, 

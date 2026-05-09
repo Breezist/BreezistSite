@@ -1,4 +1,3 @@
-
 /**
  *  _____ _____                 _     _   
  * |  __ | __  |___ ___ ___ ___|_|___| |_ 
@@ -23,6 +22,8 @@ import subdomains from 'express-subdomain';
 
 const app = express();
 const botRouters = new Map();
+const mainWeb = await import(`./source/web/routing.js`);
+let mainRouter = mainWeb.default || mainWeb;
 
 app.use(subdomains(`*`, (req, res, next) => {
     const host = req.headers.host;
@@ -30,10 +31,11 @@ app.use(subdomains(`*`, (req, res, next) => {
     if (parts.length < 3) return next(); 
     const sub = parts[0].toLowerCase();
     if (botRouters.has(sub)) {
-        return botRouters.get(sub)(req, res, next);
+        return botRouters.get(sub).handle(req, res, next);
     }
     next();
 }));
+app.use(`/`, mainRouter);
 
 let directory = path.join(__dirname, `./source/bots`);
 if (!fs.existsSync(directory)) {
@@ -42,14 +44,11 @@ if (!fs.existsSync(directory)) {
     for (let bot of fs.readdirSync(directory)) {
         let exists = fs.existsSync(path.join(directory, `/${bot}/bot.js`));
         if (exists) {
-            let sM = new shardManager(path.join(directory, `/${bot}/bot.js`), process.env.token)
-            await sM.init();
-
-            sM.on(shardManager.events.router, function(router) {
-                botRouters.set(bot.toLowerCase(), router);
-            });
+            let manager = new shardManager(path.join(directory, `/${bot}/bot.js`), process.env.token)
+            await manager.init();
+            botRouters.set(bot.toLowerCase(), manager.web);               
         }
     }
 }
 
-app.listen(8080);
+app.listen(8001);

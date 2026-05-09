@@ -1,10 +1,15 @@
-import { Events, ActivityType, PresenceUpdateStatus, REST, Routes, CommandInteraction, Client } from 'discord.js';
+/**
+ *  _____ _____                 _     _   
+ * |  __ | __  |___ ___ ___ ___|_|___| |_ 
+ * | |___| __ -|  _| -_| -_|- _| |_ -|  _|
+ * |_____|_____|_| |___|___|___|_|___|_|  
+ * @name ready.js
+ * @since May 8th, 2026
+ * @description Executes when the Discord client is ready.
+*/
+import { Events, ActivityType, PresenceUpdateStatus, REST, Routes, CommandInteraction } from 'discord.js';
 
-let changeInterval = 3;
-const activities = [
-    {name: `hello`, type: ActivityType.Playing},
-    {name: `test2`, type: ActivityType.Listening},
-]
+let changeInterval = 30;
 
 export default {
     event: Events.ClientReady,
@@ -27,6 +32,12 @@ export default {
         }
 
         while (true) {
+            let servers = client.guilds.cache.size;
+            const activities = [
+                {name: `/help`, type: ActivityType.Watching},
+                {name: `${servers} server${servers == 1 ? `` : `s`}`, type: ActivityType.Listening}
+            ]
+
 			for (const {name, type} of activities) {
 				client.user.setPresence({
                     activities: [{name, type}],

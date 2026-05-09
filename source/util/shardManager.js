@@ -7,16 +7,16 @@
  * @since May 8th, 2026
  * @description The shardManager class is responsible for the creation of Discord shards. 
 */
-
 import { ShardingManager } from 'discord.js';
 import { EventEmitter } from 'node:events';
+import express, {Router} from 'express';
 
 export default class shardManager extends EventEmitter {
     manager; web;
     #shards = [];
 
     static events = {
-        'router': `routerConnected`
+        router: `routerConnected`
     }
 
     constructor(path = `/`, token = process.env.token) {
@@ -31,15 +31,26 @@ export default class shardManager extends EventEmitter {
             ]
         });
 
+        let router = this.web = Router();
+        router.get(`/`, async (req, res) => {
+            const results = await manager.broadcastEval(client => {
+                return client.guilds.cache.map(g => ({
+                    id: g.id,
+                    name: g.name,
+                    memberCount: g.memberCount
+                }));
+            });
+            const guilds = results.flat();
+
+            res.json(guilds);
+        })
+
         manager.on(`shardCreate`, (shard) => {
             this.#shards.push(shard);
             shard.on(`message`, async (message) => {
-                let {type, routerPath} = message;
+                let {type} = message;
                 if(type == `routing`) {
-                    let webModule = await import(routerPath);
-                    let router = webModule.default || webModule;
-                    this.web = router;
-                    this.emit(shardManager.events.router, router)
+                    
                 }
             })
         });
