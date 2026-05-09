@@ -42,15 +42,6 @@ export default class shardManager extends EventEmitter {
                     this.emit(shardManager.events.router, router)
                 }
             })
-            shard.on(`spawn`, () => {
-                console.log(`Shard spawned`)
-            })
-            shard.on(`error`, () => {
-                console.log(`Error`)
-            })
-            shard.on(`death`, () => {
-                console.log("ASdasda")
-            })
         });
 
         this.manager = manager;

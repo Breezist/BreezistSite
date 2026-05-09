@@ -20,28 +20,36 @@ const { shardManager, storage } = await util();
 
 import express from 'express';
 import subdomains from 'express-subdomain';
-const app = express();
 
-// Discord Bot Integration
+const app = express();
+const botRouters = new Map();
+
+app.use(subdomains(`*`, (req, res, next) => {
+    const host = req.headers.host;
+    const parts = host.split(`.`); 
+    if (parts.length < 3) return next(); 
+    const sub = parts[0].toLowerCase();
+    if (botRouters.has(sub)) {
+        return botRouters.get(sub)(req, res, next);
+    }
+    next();
+}));
+
 let directory = path.join(__dirname, `./source/bots`);
 if (!fs.existsSync(directory)) {
     fs.mkdirSync(directory)
-}else{
+} else {
     for (let bot of fs.readdirSync(directory)) {
-        console.log(bot)
         let exists = fs.existsSync(path.join(directory, `/${bot}/bot.js`));
-        if(exists) {
+        if (exists) {
             let sM = new shardManager(path.join(directory, `/${bot}/bot.js`), process.env.token)
             await sM.init();
+
             sM.on(shardManager.events.router, function(router) {
-                app.use(subdomains(bot.toLowerCase(), router));
-            })
+                botRouters.set(bot.toLowerCase(), router);
+            });
         }
     }
 }
 
-app.get(`/`, async (req, res) => {
-    res.send(`OK`)
-})
-
-app.listen(8081)
+app.listen(8080);
