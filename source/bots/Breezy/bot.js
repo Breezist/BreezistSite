@@ -52,9 +52,14 @@ for (let file of fs.readdirSync(events)) {
 }
 
 client.shard.send({
-    type: `routing`,
+    type: `ping`,
     shardId: client.shard.ids[0],
-    routerPath: pathToFileURL(path.join(__dirname, `./web.js`)),
+});
+
+process.on(`message`, message => {
+    if (message.type === `pong`) {
+        console.log(`Manager replied:`, message.data);
+    }
 });
 
 await client.login(token);

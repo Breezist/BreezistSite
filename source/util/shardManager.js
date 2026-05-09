@@ -48,9 +48,12 @@ export default class shardManager extends EventEmitter {
         manager.on(`shardCreate`, (shard) => {
             this.#shards.push(shard);
             shard.on(`message`, async (message) => {
-                let {type} = message;
-                if(type == `routing`) {
-                    
+                let {type, shardId} = message;
+                if(type == `ping`) {
+                    shard.send({
+                        type: `pong`,
+                        data: `You have been ponged!`
+                    })
                 }
             })
         });
