@@ -9,7 +9,7 @@
 */
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,7 +44,12 @@ if (!fs.existsSync(directory)) {
     for (let bot of fs.readdirSync(directory)) {
         let exists = fs.existsSync(path.join(directory, `/${bot}/bot.js`));
         if (exists) {
-            let manager = new shardManager(path.join(directory, `/${bot}/bot.js`), process.env.token)
+            const jsonPath = path.join(directory, bot, "config.json");
+            const raw = await fs.readFileSync(jsonPath, "utf8");
+            const data = JSON.parse(raw);
+
+
+            let manager = new shardManager(path.join(directory, `/${bot}/bot.js`), process.env[data.token])
             await manager.init();
             botRouters.set(bot.toLowerCase(), manager.web);               
         }
