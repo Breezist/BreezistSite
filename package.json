@@ -19,12 +19,13 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "boot": "node --env-file=.env app.js",
+    "boot": "node app.js",
     "test": "set port=3000 && set environment=dev && npm run boot",
     "start": "set port=3000 && set environment=dev && npm run boot"
   },
   "dependencies": {
     "discord.js": "^14.26.4",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-subdomain": "^1.0.6"
   }
